@@ -1,0 +1,58 @@
+<title>test</title>
+<style type="text/css">
+li {
+  list-style: none;
+}
+
+*[draggable=true] {
+  -moz-user-select:none;
+  -khtml-user-drag: element;
+  cursor: move;
+}
+
+*:-khtml-drag {
+  background-color: rgba(238,238,238, 0.5);
+}
+
+#controls {
+  width: auto;
+  height: auto;
+  background-color: red;
+  height: 30px;
+}
+
+#container {
+  width: auto;
+  height: auto;
+  background-color: black;
+}
+
+#toons {
+  width: 100px;
+  float: left;
+  height: auto;
+  background-color: white;
+}
+
+#bin {
+  width: 100px;
+  float: right;
+  height: auto;
+  background-color: white;
+  border-style: solid;
+}
+
+</style>
+<article>
+  <div id="controls">
+    <input type="button" id="getToons" value="Get Toons">
+  </div>
+  <div id="container">
+    <div id="toons"></div>
+    <div id="bin"></div>
+  </div>
+</article>
+
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="popup.js"></script>

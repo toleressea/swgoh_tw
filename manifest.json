@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  
+  "name": "SWGoH: TW",
+  "description": "Plan SWGoH: TW squads.",
+  "version": "0.1",
+  "author": "Daniel Carcich",
+  "short_name": "GOHTW",
+  
+  "browser_action": {
+      "default_popup": "popup.html"
+  },
+
+  "permissions": [
+      "tabs",
+      "storage",
+      "activeTab"
+  ]
+}
