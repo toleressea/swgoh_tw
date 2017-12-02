@@ -22,23 +22,25 @@ li {
 }
 
 #container {
+  width: auto;
+  height: auto;
+  background-color: black;
   display: flex;
 }
 
 #toons {
-  width: 500px;
-  float: left;
-  height: auto;
+  width: 200px;
   background-color: white;
+  float: left;
 }
 
 #bin {
-  width: 500px;
+  width: 100px;
   float: right;
-  height: 500px;
+  height: 250px;
   background-color: white;
   border-style: solid;
-  flex-grow: 1;
+  flex: 1 0 auto;
 }
 
 </style>
@@ -46,10 +48,8 @@ li {
   <div id="controls">
     <input type="button" id="getToons" value="Get Toons">
   </div>
-  <div id="container">
-    <div id="toons"></div>
-    <div id="bin"></div>
-  </div>
+  <div id="toons"></div>
+  <div id="container"></div>
 </article>
 
 <script type="text/javascript" src="jquery.min.js"></script>
