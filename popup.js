@@ -61,28 +61,67 @@ var getSquadIndex = function (squadId, squads) {
     return idx;
 }
 
+var refreshDivs = function () {
+    $("div#squad").remove();
+    $("li").remove();
+    
+    var newSquadCount = Math.ceil(save.toons.length/5);
+    for (var i = 0; i < newSquadCount; i++) {
+        var iDiv = document.createElement('div');
+        var br = document.createElement('br');
+        iDiv.id = 'squad';
+        iDiv.squadId = 'Squad ' + i.toString();
+        draggableDiv(iDiv);
+        iDiv.append(iDiv.squadId);
+        iDiv.append(br);
+        $("div#container").append(iDiv);
+    }
+    
+    for (var i = 0; i < save.toons.length-1; i++) {
+        var a = document.createElement('a');
+        a.href='#';
+        a.id=save.toons[i].name;
+        a.append(save.toons[i].name);
+        var l = document.createElement('li')
+        l.appendChild(a);
+        var linkText = '<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>';
+        if (save.toons[i].squadId == 'default') {
+            $("div#toons").append(l);
+        } else {
+            var squads = $('div#squad');
+            squads[getSquadIndex(save.toons[i].squadId, squads)].appendChild(l);
+        }
+    }
+    
+    var links = document.querySelectorAll('li > a'), el = null;
+    for (var i = 0; i < links.length; i++) {
+        el = links[i];
+
+        el.setAttribute('draggable', 'true');
+
+        addEvent(el, 'dragstart', function (e) {
+            e.dataTransfer.effectAllowed = 'move'; 
+            e.dataTransfer.setData('text/html', this.innerHTML.replace("<br>",""));
+        });
+    }
+};
+
 var save = {
-    "squadCount": 0,
     "toons": []
 };
 
 draggableDiv(document.querySelector('#toons'));
-
-// $("div#toons").append('<li><a href="#" id="one">one</a></li>');
 
 document.getElementById("getToonsBtn").addEventListener('click', () => {
     function getDocumentHTML() {
         return document.body.innerHTML;
     }
 
-    //We have permission to access the activeTab, so we can call chrome.tabs.executeScript:
     chrome.tabs.executeScript({
         code: '(' + getDocumentHTML + ')();' //argument here is a string but function.toString() returns function's code
     }, (results) => {
-        //Here we have just the innerHTML and not DOM structure
         var doc = results[0];
         
-        // $(doc).find('div.collection-char-gp').length
         powerArray = $(doc).find('div.collection-char-gp');
         console.log(powerArray);
         
@@ -100,52 +139,6 @@ document.getElementById("getToonsBtn").addEventListener('click', () => {
                 save.toons.push(toon);
             }
         }
-        
-        newSquadCount = Math.ceil(save.toons.length/5);
-        console.log(newSquadCount);
-        if (newSquadCount > save.squadCount) {
-            for (var i = save.squadCount; i < newSquadCount; i++) {
-                var iDiv = document.createElement('div');
-                var br = document.createElement('br');
-                iDiv.id = 'squad';
-                iDiv.squadId = 'Squad ' + i.toString();
-                draggableDiv(iDiv);
-                iDiv.append(iDiv.squadId);
-                iDiv.append(br);
-                $("div#container").append(iDiv);
-                save.squadCount++;
-            }
-            
-            for (var i = 0; i < save.toons.length-1; i++) {
-                var a = document.createElement('a');
-                a.href='#';
-                a.id=save.toons[i].name;
-                a.append(save.toons[i].name);
-                var l = document.createElement('li')
-                l.appendChild(a);
-                var linkText = '<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>';
-                if (save.toons[i].squadId == 'default') {
-                    $("div#toons").append(l);
-                } else {
-                    var squads = $('div#squad');
-                    squads[getSquadIndex(save.toons[i].squadId, squads)].appendChild(l);
-                }
-            }
-        }
-        
-        console.log(save);
-        
-        
-        var links = document.querySelectorAll('li > a'), el = null;
-        for (var i = 0; i < links.length; i++) {
-            el = links[i];
-
-            el.setAttribute('draggable', 'true');
-
-            addEvent(el, 'dragstart', function (e) {
-                e.dataTransfer.effectAllowed = 'move'; 
-                e.dataTransfer.setData('text/html', this.innerHTML.replace("<br>",""));
-            });
-        }
+        refreshDivs();
     });
 });
