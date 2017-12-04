@@ -21,12 +21,14 @@ var draggableDiv = function (d) {
           e.stopPropagation();
       }
 
-      var el = document.getElementById(e.dataTransfer.getData('text/html'));
+      var name = e.dataTransfer.getData('text/html');
+      var el = document.getElementById(name);
       if (!el.innerHTML.includes("<br>")) {
           var br = document.createElement("br");
           el.appendChild(br);      
       }
       this.appendChild(el);
+      save.toons[getToonIndex(name)].squadId = this.squadId;
 
       return false;
     });  
@@ -73,7 +75,7 @@ document.getElementById("getToons").addEventListener('click', () => {
         console.log(powerArray);
         
         for (var i = 0; i < powerArray.length; i++) {
-            var toon = {};
+            var toon = {"squadId": "default"};
             var parts = powerArray[i].dataset.originalTitle.split(' / ')[0].split(' ');
             var power = parts[1].replace(',','');
             if (power < 6000) {
@@ -103,7 +105,11 @@ document.getElementById("getToons").addEventListener('click', () => {
             }
             
             for (var i = 0; i < save.toons.length; i++) {
-                $("div#toons").append('<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>');
+                if (save.toons[i].squadId == 'default') {
+                    $("div#toons").append('<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>');                  
+                } else {
+                    // do nothing
+                }
             }
         }
         
