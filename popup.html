@@ -14,22 +14,27 @@ li {
   background-color: rgba(238,238,238, 0.5);
 }
 
+#body {
+  width: 600;
+  height: 500px;
+}
+
 #controls {
-  width: auto;
-  height: auto;
+  width: 100%;
   background-color: black;
   height: 30px;
 }
 
 #container {
-  width: auto;
+  width: 80%;
   height: auto;
   background-color: black;
   display: flex;
+  flex-wrap: wrap;
 }
 
 #toons {
-  width: 200px;
+  width: 20%;
   background-color: white;
   float: left;
 }
@@ -37,7 +42,7 @@ li {
 #bin {
   width: 100px;
   float: right;
-  height: 250px;
+  height: 100px;
   background-color: white;
   border-style: solid;
   flex: 1 0 auto;
@@ -45,11 +50,13 @@ li {
 
 </style>
 <article>
-  <div id="controls">
-    <input type="button" id="getToons" value="Get Toons">
+  <div id="body">
+    <div id="controls">
+      <input type="button" id="getToons" value="Get Toons">
+    </div>
+    <div id="toons"></div>
+    <div id="container"></div>
   </div>
-  <div id="toons"></div>
-  <div id="container"></div>
 </article>
 
 <script type="text/javascript" src="jquery.min.js"></script>
