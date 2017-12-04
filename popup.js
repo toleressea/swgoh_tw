@@ -70,7 +70,7 @@ draggableDiv(document.querySelector('#toons'));
 
 // $("div#toons").append('<li><a href="#" id="one">one</a></li>');
 
-document.getElementById("getToons").addEventListener('click', () => {
+document.getElementById("getToonsBtn").addEventListener('click', () => {
     function getDocumentHTML() {
         return document.body.innerHTML;
     }
