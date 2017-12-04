@@ -62,7 +62,7 @@ var getSquadIndex = function (squadId, squads) {
 }
 
 var save = {
-    "squads": [],
+    "squadCount": 0,
     "toons": []
 };
 
@@ -103,8 +103,8 @@ document.getElementById("getToons").addEventListener('click', () => {
         
         newSquadCount = Math.ceil(save.toons.length/5);
         console.log(newSquadCount);
-        if (newSquadCount > save.squads.length) {
-            for (var i = save.squads.length; i < newSquadCount; i++) {
+        if (newSquadCount > save.squadCount) {
+            for (var i = save.squadCount; i < newSquadCount; i++) {
                 var iDiv = document.createElement('div');
                 var br = document.createElement('br');
                 iDiv.id = 'squad';
@@ -113,7 +113,7 @@ document.getElementById("getToons").addEventListener('click', () => {
                 iDiv.append(iDiv.squadId);
                 iDiv.append(br);
                 $("div#container").append(iDiv);
-                save.squads.push(iDiv);
+                save.squadCount++;
             }
             
             for (var i = 0; i < save.toons.length-1; i++) {
