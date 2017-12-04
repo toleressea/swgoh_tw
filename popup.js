@@ -32,6 +32,11 @@ var draggableDiv = function (d) {
     });  
 };
 
+var save = {
+    "divs": [],
+    "toons": []
+};
+
 draggableDiv(document.querySelector('#toons'));
 draggableDiv(document.querySelector('#bin'));
 
@@ -50,40 +55,40 @@ document.getElementById("getToons").addEventListener('click', () => {
     }, (results) => {
         //Here we have just the innerHTML and not DOM structure
         var doc = results[0];
-        var tName = [];
-        var tPower = [];
         
         // $(doc).find('div.collection-char-gp').length
         powerArray = $(doc).find('div.collection-char-gp');
         console.log(powerArray);
         
         for (var i = 0; i < powerArray.length; i++) {
+            var toon = {};
             var name = $(doc).find('a.collection-char-name-link')[i].innerText;
             var parts = powerArray[i].dataset.originalTitle.split(' / ')[0].split(' ');
             var power = parts[1].replace(',','');
             if (power < 6000) {
                 break;
             }
-            tName.push(name);
-            tPower.push(power);
+            toon.name = name;
+            toon.power = power;
+            save.toons.push(toon);
         }
         
-        console.log(tName);
-        console.log(tPower);
+        console.log(save);
         
-        console.log(Math.ceil(tName.length/5));
-        for (var i = 0; i < Math.ceil(tName.length/5); i++) {
+        console.log(Math.ceil(save.toons.length/5));
+        for (var i = 0; i < Math.ceil(save.toons.length/5); i++) {
             var iDiv = document.createElement('div');
             var br = document.createElement('br');
             iDiv.id = 'bin';
+            iDiv.name = 'Squad ' + i;
             draggableDiv(iDiv);
-            iDiv.append('Squad ' + i);
+            iDiv.append(iDiv.name);
             iDiv.append(br);
             $("div#container").append(iDiv);
         }
         
-        for (var i = 0; i < tName.length; i++) {
-            $("div#toons").append('<li><a href="#" id="' + tName[i] + '">' + tName[i] + '</a></li>');
+        for (var i = 0; i < save.toons.length; i++) {
+            $("div#toons").append('<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>');
         }
         
         var links = document.querySelectorAll('li > a'), el = null;
