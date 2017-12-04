@@ -47,6 +47,20 @@ var getToonIndex = function (name) {
     return idx;
 }
 
+var getSquadIndex = function (squadId, squads) {
+    var idx = -1;
+    var i = 0;
+    while (i < squads.length) {
+        console.log(squads[i].squadId);
+        if (squads[i].squadId == squadId) {
+            idx = i;
+            return idx;
+        }
+        i++;
+    }
+    return idx;
+}
+
 var save = {
     "squads": [],
     "toons": []
@@ -57,8 +71,6 @@ draggableDiv(document.querySelector('#toons'));
 // $("div#toons").append('<li><a href="#" id="one">one</a></li>');
 
 document.getElementById("getToons").addEventListener('click', () => {
-    console.log("Popup DOM fully loaded and parsed");
-
     function getDocumentHTML() {
         return document.body.innerHTML;
     }
@@ -96,7 +108,7 @@ document.getElementById("getToons").addEventListener('click', () => {
                 var iDiv = document.createElement('div');
                 var br = document.createElement('br');
                 iDiv.id = 'squad';
-                iDiv.squadId = 'Squad ' + i;
+                iDiv.squadId = 'Squad ' + i.toString();
                 draggableDiv(iDiv);
                 iDiv.append(iDiv.squadId);
                 iDiv.append(br);
@@ -104,11 +116,19 @@ document.getElementById("getToons").addEventListener('click', () => {
                 save.squads.push(iDiv);
             }
             
-            for (var i = 0; i < save.toons.length; i++) {
+            for (var i = 0; i < save.toons.length-1; i++) {
+                var a = document.createElement('a');
+                a.href='#';
+                a.id=save.toons[i].name;
+                a.append(save.toons[i].name);
+                var l = document.createElement('li')
+                l.appendChild(a);
+                var linkText = '<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>';
                 if (save.toons[i].squadId == 'default') {
-                    $("div#toons").append('<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>');                  
+                    $("div#toons").append(l);
                 } else {
-                    // do nothing
+                    var squads = $('div#squad');
+                    squads[getSquadIndex(save.toons[i].squadId, squads)].appendChild(l);
                 }
             }
         }
