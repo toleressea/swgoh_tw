@@ -32,13 +32,25 @@ var draggableDiv = function (d) {
     });  
 };
 
+var getToonIndex = function (name) {
+    var idx = -1;
+    var i = 0;
+    while (i < save.toons.length) {
+        if (save.toons[i].name == name) {
+            idx = i;
+            return idx;
+        }
+        i++;
+    }
+    return idx;
+}
+
 var save = {
-    "divs": [],
+    "squads": [],
     "toons": []
 };
 
 draggableDiv(document.querySelector('#toons'));
-draggableDiv(document.querySelector('#bin'));
 
 // $("div#toons").append('<li><a href="#" id="one">one</a></li>');
 
@@ -62,34 +74,41 @@ document.getElementById("getToons").addEventListener('click', () => {
         
         for (var i = 0; i < powerArray.length; i++) {
             var toon = {};
-            var name = $(doc).find('a.collection-char-name-link')[i].innerText;
             var parts = powerArray[i].dataset.originalTitle.split(' / ')[0].split(' ');
             var power = parts[1].replace(',','');
             if (power < 6000) {
                 break;
             }
+            var name = $(doc).find('a.collection-char-name-link')[i].innerText;
             toon.name = name;
             toon.power = power;
-            save.toons.push(toon);
+            if (getToonIndex(name) < 0) {
+                save.toons.push(toon);
+            }
+        }
+        
+        newSquadCount = Math.ceil(save.toons.length/5);
+        console.log(newSquadCount);
+        if (newSquadCount > save.squads.length) {
+            for (var i = save.squads.length; i < newSquadCount; i++) {
+                var iDiv = document.createElement('div');
+                var br = document.createElement('br');
+                iDiv.id = 'squad';
+                iDiv.squadId = 'Squad ' + i;
+                draggableDiv(iDiv);
+                iDiv.append(iDiv.squadId);
+                iDiv.append(br);
+                $("div#container").append(iDiv);
+                save.squads.push(iDiv);
+            }
+            
+            for (var i = 0; i < save.toons.length; i++) {
+                $("div#toons").append('<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>');
+            }
         }
         
         console.log(save);
         
-        console.log(Math.ceil(save.toons.length/5));
-        for (var i = 0; i < Math.ceil(save.toons.length/5); i++) {
-            var iDiv = document.createElement('div');
-            var br = document.createElement('br');
-            iDiv.id = 'bin';
-            iDiv.name = 'Squad ' + i;
-            draggableDiv(iDiv);
-            iDiv.append(iDiv.name);
-            iDiv.append(br);
-            $("div#container").append(iDiv);
-        }
-        
-        for (var i = 0; i < save.toons.length; i++) {
-            $("div#toons").append('<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>');
-        }
         
         var links = document.querySelectorAll('li > a'), el = null;
         for (var i = 0; i < links.length; i++) {
