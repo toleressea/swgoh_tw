@@ -106,12 +106,6 @@ var refreshDivs = function () {
     }
 };
 
-var save = {
-    "toons": []
-};
-
-draggableDiv(document.querySelector('#toons'));
-
 document.getElementById("getToonsBtn").addEventListener('click', () => {
     function getDocumentHTML() {
         return document.body.innerHTML;
@@ -142,3 +136,31 @@ document.getElementById("getToonsBtn").addEventListener('click', () => {
         refreshDivs();
     });
 });
+
+document.getElementById("saveBtn").addEventListener('click', () => {
+    chrome.storage.sync.set({"save": save}, function() {});
+});
+
+document.getElementById("loadBtn").addEventListener('click', () => {
+    chrome.storage.sync.get(["save"], function(items) {
+        save = items.save;
+        refreshDivs();
+    });
+});
+
+var save = {
+    "toons": []
+};
+
+var autoLoadCB = document.getElementById("autoLoadCB");
+autoLoadCB.addEventListener('click', () => {
+    chrome.storage.sync.set({"autoLoad": autoLoadCB.checked}, function(){});
+});
+chrome.storage.sync.get({"autoLoad":false}, function(items) {
+    $("#autoLoadCB").prop("checked", items.autoLoad);
+    if (autoLoadCB.checked) {
+        document.getElementById("loadBtn").click();
+    }
+});
+
+draggableDiv(document.querySelector('#toons'));
