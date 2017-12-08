@@ -145,6 +145,10 @@ document.getElementById("loadBtn").addEventListener('click', () => {
     });
 });
 
+document.getElementById("clearBtn").addEventListener('click', () => {
+    $('.squad').remove();
+});
+
 var save = {
     "toons": []
 };
