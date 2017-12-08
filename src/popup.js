@@ -162,6 +162,7 @@ document.getElementById("loadBtn").addEventListener('click', () => {
 // Delete all squads and toons
 document.getElementById("clearBtn").addEventListener('click', () => {
     $('.squad').remove();
+    save.toons = [];
 });
 
 // Define save data variable
