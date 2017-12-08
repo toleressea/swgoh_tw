@@ -1,39 +1,3 @@
-var draggableDiv = function (d) {
-    addEvent(d, 'dragover', function (e) {
-        if (e.preventDefault) e.preventDefault(); // allows us to drop
-        this.className = 'over';
-        e.dataTransfer.dropEffect = 'move';
-        return false;
-    });
-
-    // to get IE to work
-    addEvent(d, 'dragenter', function (e) {
-        this.className = 'over';
-        return false;
-    });
-
-    addEvent(d, 'dragleave', function () {
-        this.className = '';
-    });
-
-    addEvent(d, 'drop', function (e) {
-      if (e.stopPropagation) {
-          e.stopPropagation();
-      }
-
-      var name = e.dataTransfer.getData('text/html');
-      var el = document.getElementById(name);
-      if (!el.innerHTML.includes("<br>")) {
-          var br = document.createElement("br");
-          el.appendChild(br);      
-      }
-      this.appendChild(el);
-      save.toons[getToonIndex(name)].squadId = this.squadId;
-
-      return false;
-    });  
-};
-
 var getToonIndex = function (name) {
     var idx = -1;
     var i = 0;
@@ -51,8 +15,8 @@ var getSquadIndex = function (squadId, squads) {
     var idx = -1;
     var i = 0;
     while (i < squads.length) {
-        console.log(squads[i].squadId);
-        if (squads[i].squadId == squadId) {
+        console.log(squads[i].id);
+        if (squads[i].id == squadId) {
             idx = i;
             return idx;
         }
@@ -61,49 +25,68 @@ var getSquadIndex = function (squadId, squads) {
     return idx;
 }
 
+var createSquadTable = function(id) {
+    var t = document.createElement('table');
+    t.id = id;
+    t.className = 'squad';
+    
+    var tb = document.createElement('tbody');
+    tb.className = 'connectedSortable';
+    
+    var tr = document.createElement('tr');
+    var thName = document.createElement('th');
+    var thPower = document.createElement('th');
+    thName.append(document.createTextNode(id));
+    thPower.append(document.createTextNode(0));
+    tr.appendChild(thName);
+    tr.appendChild(thPower);
+    tb.appendChild(tr);
+    t.appendChild(tb);
+    
+    return t;
+}
+
 var refreshDivs = function () {
-    $("div#squad").remove();
-    $("li").remove();
+    $(".squad").remove();
+    
+    $("div#toons").append(createSquadTable('unassigned'));
     
     var newSquadCount = Math.ceil(save.toons.length/5);
+    console.log(newSquadCount);
     for (var i = 0; i < newSquadCount; i++) {
-        var iDiv = document.createElement('div');
-        var br = document.createElement('br');
-        iDiv.id = 'squad';
-        iDiv.squadId = 'Squad ' + i.toString();
-        draggableDiv(iDiv);
-        iDiv.append(iDiv.squadId);
-        iDiv.append(br);
-        $("div#container").append(iDiv);
+        var iTable = createSquadTable('Squad ' + i);
+        $("div#container").append(iTable);
     }
     
     for (var i = 0; i < save.toons.length-1; i++) {
-        var a = document.createElement('a');
-        a.href='#';
-        a.id=save.toons[i].name;
-        a.append(save.toons[i].name);
-        var l = document.createElement('li')
-        l.appendChild(a);
-        var linkText = '<li><a href="#" id="' + save.toons[i].name + '">' + save.toons[i].name + '</a></li>';
-        if (save.toons[i].squadId == 'default') {
-            $("div#toons").append(l);
-        } else {
-            var squads = $('div#squad');
-            squads[getSquadIndex(save.toons[i].squadId, squads)].appendChild(l);
-        }
+        var tr = document.createElement('tr');
+        var tdName = document.createElement('td');
+        var tdPower = document.createElement('td');
+        tdName.append(document.createTextNode(save.toons[i].name));
+        tdPower.append(document.createTextNode(save.toons[i].power));
+        tr.appendChild(tdName);
+        tr.appendChild(tdPower);
+      
+        var squads = $('.squad');
+        var targetSquad = squads[getSquadIndex(save.toons[i].squadId, squads)];
+        targetSquad.children[0].appendChild(tr);
     }
     
-    var links = document.querySelectorAll('li > a'), el = null;
-    for (var i = 0; i < links.length; i++) {
-        el = links[i];
-
-        el.setAttribute('draggable', 'true');
-
-        addEvent(el, 'dragstart', function (e) {
-            e.dataTransfer.effectAllowed = 'move'; 
-            e.dataTransfer.setData('text/html', this.innerHTML.replace("<br>",""));
-        });
-    }
+    $("tbody.connectedSortable")
+        .sortable({
+        connectWith: ".connectedSortable",
+        items: "> tr:not(:first)",
+        appendTo: "parent",
+        helper: "clone",
+        cursor: "move",
+        zIndex: 999990,
+        receive: function (event, item) {
+            var name = item.item[0].children[0].innerHTML;
+            var squadId = item.item[0].offsetParent.id;
+            console.log(name + ' --> ' + squadId);
+            save.toons[getToonIndex(name)].squadId = squadId;
+        }
+    });
 };
 
 document.getElementById("getToonsBtn").addEventListener('click', () => {
@@ -120,7 +103,7 @@ document.getElementById("getToonsBtn").addEventListener('click', () => {
         console.log(powerArray);
         
         for (var i = 0; i < powerArray.length; i++) {
-            var toon = {"squadId": "default"};
+            var toon = {"squadId": "unassigned"};
             var parts = powerArray[i].dataset.originalTitle.split(' / ')[0].split(' ');
             var power = parts[1].replace(',','');
             if (power < 6000) {
@@ -162,5 +145,3 @@ chrome.storage.sync.get({"autoLoad":false}, function(items) {
         document.getElementById("loadBtn").click();
     }
 });
-
-draggableDiv(document.querySelector('#toons'));
