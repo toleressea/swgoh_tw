@@ -69,7 +69,9 @@ var refreshDivs = function () {
       
         var squads = $('.squad');
         var targetSquad = squads[getSquadIndex(save.toons[i].squadId, squads)];
+        var targetPower = parseInt(targetSquad.children[0].children[0].children[1].innerHTML)
         targetSquad.children[0].appendChild(tr);
+        targetSquad.children[0].children[0].children[1].innerHTML = (targetPower + parseInt(save.toons[i].power));
     }
     
     $("tbody.connectedSortable")
@@ -82,7 +84,19 @@ var refreshDivs = function () {
         zIndex: 999990,
         receive: function (event, item) {
             var name = item.item[0].children[0].innerHTML;
+            var power = parseInt(item.item[0].children[1].innerHTML);
             var squadId = item.item[0].offsetParent.id;
+            var prevSquadId = save.toons[getToonIndex(name)].squadId;
+
+            var squads = $('.squad');
+            var targetSquad = squads[getSquadIndex(squadId, squads)];
+            var targetPower = parseInt(targetSquad.children[0].children[0].children[1].innerHTML);
+            targetSquad.children[0].children[0].children[1].innerHTML = (targetPower + power);
+            
+            var prevSquad = squads[getSquadIndex(prevSquadId, squads)];
+            var prevPower = parseInt(prevSquad.children[0].children[0].children[1].innerHTML);
+            prevSquad.children[0].children[0].children[1].innerHTML = (prevPower - power);
+            
             // console.log(name + ' --> ' + squadId);
             save.toons[getToonIndex(name)].squadId = squadId;
         }
