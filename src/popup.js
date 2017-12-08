@@ -15,7 +15,7 @@ var getSquadIndex = function (squadId, squads) {
     var idx = -1;
     var i = 0;
     while (i < squads.length) {
-        console.log(squads[i].id);
+        // console.log(squads[i].id);
         if (squads[i].id == squadId) {
             idx = i;
             return idx;
@@ -52,7 +52,7 @@ var refreshDivs = function () {
     $("div#toons").append(createSquadTable('unassigned'));
     
     var newSquadCount = Math.ceil(save.toons.length/5);
-    console.log(newSquadCount);
+    // console.log(newSquadCount);
     for (var i = 1; i <= newSquadCount; i++) {
         var iTable = createSquadTable('Squad ' + i);
         $("div#container").append(iTable);
@@ -83,7 +83,7 @@ var refreshDivs = function () {
         receive: function (event, item) {
             var name = item.item[0].children[0].innerHTML;
             var squadId = item.item[0].offsetParent.id;
-            console.log(name + ' --> ' + squadId);
+            // console.log(name + ' --> ' + squadId);
             save.toons[getToonIndex(name)].squadId = squadId;
         }
     });
