@@ -1,70 +1,114 @@
-<title>test</title>
 <style type="text/css">
-li {
-  list-style: none;
+table.mytable {
+    width:185px;
+    font-size: small;
+    border:#ccc 1px solid;
 }
-
-*[draggable=true] {
-  -moz-user-select:none;
-  -khtml-user-drag: element;
-  cursor: move;
+.mytable th {
+    width: 75%;
+    color:#fff;
+    border-top:1px solid #fafafa;
+    border-bottom:1px solid #e0e0e0;
+    background:#191970;
+    text-align: left;
 }
-
-*:-khtml-drag {
-  background-color: rgba(238,238,238, 0.5);
+.mytable tr td {
+    border-top: 1px solid #ffffff;
+    border-bottom:1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
+}
+.mytable tr:hover td {
+    background: #f2f2f2;
+    transform:scale(1.01);
+    outline:1px solid #191970;
 }
 
 #body {
-  width: 600;
-  height: 500px;
+    width: 600px;
+    height: 500px;
 }
 
 #controls {
-  width: 100%;
-  background-color: black;
-  height: 30px;
+    width: 100%;
+    background-color: black;
+    height: 30px;
 }
 
 #container {
-  width: 80%;
-  height: auto;
-  background-color: black;
-  display: flex;
-  flex-wrap: wrap;
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 #toons {
-  width: 20%;
-  height: 100%;
-  background-color: white;
-  float: left;
-  overflow: scroll;
-  overflow-x: hidden;
+    width: auto;
+    height: 100%;
+    float: left;
+    overflow: scroll;
+    overflow-x: hidden;
 }
 
 #squad {
-  width: 125px;
-  float: right;
-  height: 125px;
-  background-color: white;
-  border-style: solid;
-  flex: 1 0 auto;
+    width: 125px;
+    float: right;
+    height: 125px;
+    background-color: white;
+    border-style: solid;
+    flex: 1 0 auto;
 }
-
 </style>
-<article>
-  <div id="body">
+
+<div id="body">
     <div id="controls">
-      <input type="button" id="getToonsBtn" value="Get Toons">
-      <input type="button" id="saveBtn" value="Save">
-      <input type="button" id="loadBtn" value="Load">
-      <input type="checkbox" id="autoLoadCB">
+        <input type="button" id="getToonsBtn" value="Get Toons">
+        <input type="button" id="saveBtn" value="Save">
+        <input type="button" id="loadBtn" value="Load">
+        <input type="checkbox" id="autoLoadCB">
     </div>
-    <div id="toons" squadId="default"></div>
-    <div id="container"></div>
-  </div>
-</article>
+    <div id="toons" squadId="default">
+        <table id='table0' class="mytable">
+            <tbody class="connectedSortable">
+                <tr class="table0">
+                    <th>Name</th>
+                    <th>Power</th>
+                </tr>
+                <tr class="table0">
+                    <td>Test Name0</td>
+                    <td>54321</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="container">
+        <table id='table1' class="mytable">
+            <tbody class="connectedSortable">
+                <tr class="table1">
+                    <th>Name</th>
+                    <th>Power</th>
+                </tr>
+                <tr class="table1">
+                    <td>Test Name1</td>
+                    <td>54321</td>
+                </tr>
+            </tbody>
+        </table>
+        <table id='table2' class="mytable">
+            <tbody class="connectedSortable">
+                <tr class="table2">
+                    <th>Name</th>
+                    <th>Power</th>
+                </tr>
+                <tr class="table2">
+                    <td>Test Name2</td>
+                    <td>12345</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <script type="text/javascript" src="src/jquery.min.js"></script>
-<script type="text/javascript" src="src/utils.js"></script>
+<script type="text/javascript" src="src/jquery-ui.min.js"></script>
+<script type="text/css" src="src/jquery-ui.css"></script>
 <script type="text/javascript" src="src/popup.js"></script>
