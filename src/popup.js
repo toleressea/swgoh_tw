@@ -25,6 +25,7 @@ var getSquadIndex = function (squadId, squads) {
     return idx;
 }
 
+// Convenience function
 var createSquadTable = function(id) {
     var t = document.createElement('table');
     t.id = id;
@@ -47,10 +48,13 @@ var createSquadTable = function(id) {
 }
 
 var refreshDivs = function () {
+    // Delete all squads and toons
     $(".squad").remove();
     
+    // Create container for toons not yet assigned to a squad
     $("div#toons").append(createSquadTable('unassigned'));
     
+    // Generate squad tables dynamically based on number of toons
     var newSquadCount = Math.ceil(save.toons.length/5);
     // console.log(newSquadCount);
     for (var i = 1; i <= newSquadCount; i++) {
@@ -58,6 +62,7 @@ var refreshDivs = function () {
         $("div#container").append(iTable);
     }
     
+    // Use save data to add toons to squad tables
     for (var i = 0; i < save.toons.length-1; i++) {
         var tr = document.createElement('tr');
         var tdName = document.createElement('td');
@@ -74,6 +79,7 @@ var refreshDivs = function () {
         targetSquad.children[0].children[0].children[1].innerHTML = (targetPower + parseInt(save.toons[i].power));
     }
     
+    // Define drag'n'drop behavior for table rows
     $("tbody.connectedSortable")
         .sortable({
         connectWith: ".connectedSortable",
@@ -83,22 +89,27 @@ var refreshDivs = function () {
         cursor: "move",
         zIndex: 999990,
         receive: function (event, item) {
+            // Get the values we'll need
             var name = item.item[0].children[0].innerHTML;
             var power = parseInt(item.item[0].children[1].innerHTML);
             var squadId = item.item[0].offsetParent.id;
             var prevSquadId = save.toons[getToonIndex(name)].squadId;
 
+            // Find the before and after squad tables
             var squads = $('.squad');
             var targetSquad = squads[getSquadIndex(squadId, squads)];
             var targetPower = parseInt(targetSquad.children[0].children[0].children[1].innerHTML);
-            targetSquad.children[0].children[0].children[1].innerHTML = (targetPower + power);
-            
             var prevSquad = squads[getSquadIndex(prevSquadId, squads)];
             var prevPower = parseInt(prevSquad.children[0].children[0].children[1].innerHTML);
+            
+            // Calculate new squad table power totals
+            targetSquad.children[0].children[0].children[1].innerHTML = (targetPower + power);
             prevSquad.children[0].children[0].children[1].innerHTML = (prevPower - power);
             
-            // console.log(name + ' --> ' + squadId);
+            // Assign new squadId in save data for toon belonging to selected row
             save.toons[getToonIndex(name)].squadId = squadId;
+            
+            // console.log(name + ' --> ' + squadId);
         }
     });
 };
@@ -108,6 +119,7 @@ document.getElementById("getToonsBtn").addEventListener('click', () => {
         return document.body.innerHTML;
     }
 
+    // Build save data by scraping swgoh.gg collection
     chrome.tabs.executeScript({
         code: '(' + getDocumentHTML + ')();' //argument here is a string but function.toString() returns function's code
     }, (results) => {
@@ -134,10 +146,12 @@ document.getElementById("getToonsBtn").addEventListener('click', () => {
     });
 });
 
+// Preserve save data in chrome storage API
 document.getElementById("saveBtn").addEventListener('click', () => {
     chrome.storage.sync.set({"save": save}, function() {});
 });
 
+// Load save data from chrome storage API
 document.getElementById("loadBtn").addEventListener('click', () => {
     chrome.storage.sync.get(["save"], function(items) {
         save = items.save;
@@ -145,14 +159,17 @@ document.getElementById("loadBtn").addEventListener('click', () => {
     });
 });
 
+// Delete all squads and toons
 document.getElementById("clearBtn").addEventListener('click', () => {
     $('.squad').remove();
 });
 
+// Define save data variable
 var save = {
-    "toons": []
+    "toons": []  // Contains information about each toon
 };
 
+// Boilerplate logic for remembering checkbox value and loading automatically
 var autoLoadCB = document.getElementById("autoLoadCB");
 autoLoadCB.addEventListener('click', () => {
     chrome.storage.sync.set({"autoLoad": autoLoadCB.checked}, function(){});
