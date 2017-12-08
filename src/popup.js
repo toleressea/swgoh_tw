@@ -53,7 +53,7 @@ var refreshDivs = function () {
     
     var newSquadCount = Math.ceil(save.toons.length/5);
     console.log(newSquadCount);
-    for (var i = 0; i < newSquadCount; i++) {
+    for (var i = 1; i <= newSquadCount; i++) {
         var iTable = createSquadTable('Squad ' + i);
         $("div#container").append(iTable);
     }
