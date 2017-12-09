@@ -108,11 +108,22 @@ var refreshDivs = function () {
             
             // Assign new squadId in save data for toon belonging to selected row
             save.toons[getToonIndex(name)].squadId = squadId;
+
+            // Autosave all data after any change
+            saveData();
             
             // console.log(name + ' --> ' + squadId);
         }
     });
 };
+
+var saveData = function() {
+    chrome.storage.sync.set({"save": save}, function() {});
+}
+
+var isNumber = function (n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 document.getElementById("getToonsBtn").addEventListener('click', () => {
     function getDocumentHTML() {
@@ -143,19 +154,9 @@ document.getElementById("getToonsBtn").addEventListener('click', () => {
             }
         }
         refreshDivs();
-    });
-});
-
-// Preserve save data in chrome storage API
-document.getElementById("saveBtn").addEventListener('click', () => {
-    chrome.storage.sync.set({"save": save}, function() {});
-});
-
-// Load save data from chrome storage API
-document.getElementById("loadBtn").addEventListener('click', () => {
-    chrome.storage.sync.get(["save"], function(items) {
-        save = items.save;
-        refreshDivs();
+        
+        // Autosave all data after any change
+        saveData();
     });
 });
 
@@ -163,28 +164,10 @@ document.getElementById("loadBtn").addEventListener('click', () => {
 document.getElementById("clearBtn").addEventListener('click', () => {
     $('.squad').remove();
     save.toons = [];
+    
+    // Autosave all data after any change
+    saveData();
 });
-
-// Define save data variable
-var save = {
-    "toons": []  // Contains information about each toon
-};
-
-// Boilerplate logic for remembering checkbox value and loading automatically
-var autoLoadCB = document.getElementById("autoLoadCB");
-autoLoadCB.addEventListener('click', () => {
-    chrome.storage.sync.set({"autoLoad": autoLoadCB.checked}, function(){});
-});
-chrome.storage.sync.get({"autoLoad":false}, function(items) {
-    $("#autoLoadCB").prop("checked", items.autoLoad);
-    if (autoLoadCB.checked) {
-        document.getElementById("loadBtn").click();
-    }
-});
-
-var isNumber = function (n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
 
 document.getElementById("copyBtn").addEventListener('click', () => {
     var toonList = document.createElement('div');
@@ -201,4 +184,14 @@ document.getElementById("copyBtn").addEventListener('click', () => {
     document.execCommand('copy');
     dummy.remove();
     toonList.remove();
+});
+
+// Define save data variable
+var save = {
+    "toons": []  // Contains information about each toon
+};
+
+chrome.storage.sync.get(["save"], function(items) {
+    save = items.save;
+    refreshDivs();
 });
