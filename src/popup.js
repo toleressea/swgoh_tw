@@ -63,7 +63,7 @@ var refreshDivs = function () {
     }
     
     // Use save data to add toons to squad tables
-    for (var i = 0; i < save.toons.length-1; i++) {
+    for (var i = 0; i < save.toons.length; i++) {
         var tr = document.createElement('tr');
         var tdName = document.createElement('td');
         var tdPower = document.createElement('td');
