@@ -191,7 +191,11 @@ var save = {
     "toons": []  // Contains information about each toon
 };
 
-chrome.storage.sync.get(["save"], function(items) {
-    save = items.save;
-    refreshDivs();
-});
+try {
+    chrome.storage.sync.get(["save"], function(items) {
+        save = items.save;
+        refreshDivs();
+    });
+} catch(err) {
+    console.log(err);
+}
