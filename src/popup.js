@@ -181,3 +181,24 @@ chrome.storage.sync.get({"autoLoad":false}, function(items) {
         document.getElementById("loadBtn").click();
     }
 });
+
+var isNumber = function (n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+document.getElementById("copyBtn").addEventListener('click', () => {
+    var toonList = document.createElement('div');
+    var tds = $('td');
+    for (var i = 0; i < tds.length-1; i++) {
+        if (isNumber(tds[i].innerText)) {
+            // do nothing
+        } else {
+            toonList.append(tds[i].innerText);
+            toonList.append(document.createElement('br'));
+        }
+    }
+    var dummy = $('<textarea>').val(toonList.innerText).appendTo('body').select();
+    document.execCommand('copy');
+    dummy.remove();
+    toonList.remove();
+});

@@ -30,13 +30,13 @@ table.squad {
 
 #controls {
     width: 100%;
-    background-color: black;
+    background-color: white;
     height: 30px;
 }
 
 #container {
     width: auto;
-    height: 500px;
+    height: 550px;
     display: flex;
     flex-wrap: wrap;
     overflow: scroll;
@@ -45,7 +45,7 @@ table.squad {
 
 #toons {
     width: auto;
-    height: 500px;
+    height: 550px;
     float: left;
     overflow: scroll;
     overflow-x: hidden;
@@ -66,8 +66,9 @@ table.squad {
         <input type="button" id="getToonsBtn" value="Get Toons">
         <input type="button" id="saveBtn" value="Save">
         <input type="button" id="loadBtn" value="Load">
+        <input type="checkbox" id="autoLoadCB">Auto-Load
         <input type="button" id="clearBtn" value="Clear">
-        <input type="checkbox" id="autoLoadCB">
+        <input type="button" id="copyBtn" value="Copy Toons to Clipboard">
     </div>
     <div id="toons"></div>
     <div id="container"></div>
