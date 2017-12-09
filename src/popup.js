@@ -122,7 +122,7 @@ var saveData = function() {
 }
 
 var isNumber = function (n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
+    return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 document.getElementById("getToonsBtn").addEventListener('click', () => {
@@ -193,8 +193,10 @@ var save = {
 
 try {
     chrome.storage.sync.get(["save"], function(items) {
-        save = items.save;
-        refreshDivs();
+        if (typeof items.save != 'undefined') {
+            save = items.save;
+            refreshDivs();
+        }
     });
 } catch(err) {
     console.log(err);
